@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -25,13 +26,17 @@ import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.*
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     lateinit var locationRequest: LocationRequest
     val PERMISSION_ID = 1010
 
     lateinit var button: Button
+
+    lateinit var button2: Button
+
+    lateinit var button3: Button
 
     lateinit var textlocation:TextView
 
@@ -47,6 +52,8 @@ class MainActivity : AppCompatActivity() {
         enableLoc()
 
         button = findViewById(R.id.button)
+        button2 = findViewById(R.id.button2)
+        button3 = findViewById(R.id.button3)
         textlocation = findViewById(R.id.textView)
         textaddress = findViewById(R.id.textView2)
 
@@ -60,6 +67,8 @@ class MainActivity : AppCompatActivity() {
              }*/
             getLastLocation()
         }
+
+        button2.setOnClickListener(this)
 
     }
 
@@ -231,5 +240,10 @@ class MainActivity : AppCompatActivity() {
                 Activity.RESULT_CANCELED -> Log.d("abc","CANCEL")
             }
         }
+    }
+
+    override fun onClick(p0: View?) {
+        val intent = Intent(this@MainActivity,MapTrackActivity::class.java)
+        startActivity(intent)
     }
 }
