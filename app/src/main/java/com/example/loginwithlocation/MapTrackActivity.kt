@@ -2,27 +2,29 @@ package com.example.loginwithlocation
 
 import android.Manifest
 import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.GroundOverlayOptions
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import java.util.*
+import kotlin.collections.ArrayList
+
 
 class MapTrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap
     private val TAG = MapTrackActivity::class.java.simpleName
     private val REQUEST_LOCATION_PERMISSION = 1
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +36,7 @@ class MapTrackActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
+
         map = googleMap
 
         //These coordinates represent the lattitude and longitude of the Googleplex.
@@ -42,19 +45,42 @@ class MapTrackActivity : AppCompatActivity(), OnMapReadyCallback {
         val zoomLevel = 15f
         val overlaySize = 100f
 
-        val homeLatLng = LatLng(latitude, longitude)
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(homeLatLng, zoomLevel))
-        map.addMarker(MarkerOptions().position(homeLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.me)))
+      //  val homeLatLng = LatLng(latitude, longitude)
+
+        val startLatLng = LatLng(30.707104, 76.690749)
+        val endLatLng = LatLng(30.721419, 76.730017)
+
+        var points: List<LatLng> = ArrayList()
+
+        map.addPolyline(
+            PolylineOptions()
+                .addAll(points)
+                .width(10F)
+                .color(Color.RED)
+                .visible(true)
+                .clickable(true))
+
+
+
+        // map.moveCamera(CameraUpdateFactory.newLatLngZoom(homeLatLng, zoomLevel))
+        //map.addMarker(MarkerOptions().position(homeLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.me)))
 
         val googleOverlay = GroundOverlayOptions()
                 //.image(BitmapDescriptorFactory.fromResource(R.drawable.me))
-                .position(homeLatLng, overlaySize)
+               // .position(homeLatLng, overlaySize)
        //  map.addGroundOverlay(googleOverlay)
 
         setMapLongClick(map)
-        setPoiClick(map) 
-        //  setMapStyle(map)
+       // setPoiClick(map)
         enableMyLocation()
+//
+//        map.addPolyline(
+//            PolylineOptions()
+//                .add(homeLatLng)
+//                .width(10F)
+//                .color(Color.RED)
+//                .visible(true)
+//                .clickable(true))
 
 //        if(google.maps.geometry.spherical
 //                        .computeDistanceBetween(myPosition,dest.marker.position)<50){
@@ -101,7 +127,10 @@ class MapTrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
+
     private fun setMapLongClick(map: GoogleMap) {
+
+        var points: List<LatLng> = ArrayList()
 
         map.setOnMapLongClickListener { latLng ->
             // A Snippet is Additional text that's displayed below the title.
@@ -118,9 +147,24 @@ class MapTrackActivity : AppCompatActivity(), OnMapReadyCallback {
                             .snippet(snippet)
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
             )
+
+            map.addPolyline(
+                    PolylineOptions()
+                        .addAll(points)
+                        .width(10F)
+                        .color(Color.RED)
+                        .visible(true)
+                        .clickable(true))
+
+            //addPolyline(map)
+
         }
 
     }
+
+
+
+
 
     private fun isPermissionGranted() : Boolean {
         return ContextCompat.checkSelfPermission(
